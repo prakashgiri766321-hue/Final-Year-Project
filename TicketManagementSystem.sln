@@ -5,6 +5,14 @@ VisualStudioVersion = 17.14.36221.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManagementSystem.Web", "TicketManagementSystem.Web\TicketManagementSystem.Web.csproj", "{1C3B8580-04F9-460B-A6E3-C7BCDFFE88DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManagementSystem.Common", "TicketManagementSystem.Common\TicketManagementSystem.Common.csproj", "{7BCB29CD-0870-49C9-9375-D5623970B1F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManagementSystem.Domain", "TicketManagementSystem.Domain\TicketManagementSystem.Domain.csproj", "{8D98CEAE-BD68-4EB4-8D32-B92FE1EEB182}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManagementSystem.Infrastructure", "TicketManagementSystem.Infrastructure\TicketManagementSystem.Infrastructure.csproj", "{D2C7325A-6035-4A2C-B7C0-D47F944094E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManagementSystem.Service", "TicketManagementSystem.Service\TicketManagementSystem.Service.csproj", "{4500FA6E-28E6-4113-ADCB-8148F645C595}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +23,22 @@ Global
 		{1C3B8580-04F9-460B-A6E3-C7BCDFFE88DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C3B8580-04F9-460B-A6E3-C7BCDFFE88DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C3B8580-04F9-460B-A6E3-C7BCDFFE88DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BCB29CD-0870-49C9-9375-D5623970B1F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BCB29CD-0870-49C9-9375-D5623970B1F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BCB29CD-0870-49C9-9375-D5623970B1F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BCB29CD-0870-49C9-9375-D5623970B1F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D98CEAE-BD68-4EB4-8D32-B92FE1EEB182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D98CEAE-BD68-4EB4-8D32-B92FE1EEB182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D98CEAE-BD68-4EB4-8D32-B92FE1EEB182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D98CEAE-BD68-4EB4-8D32-B92FE1EEB182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2C7325A-6035-4A2C-B7C0-D47F944094E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2C7325A-6035-4A2C-B7C0-D47F944094E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2C7325A-6035-4A2C-B7C0-D47F944094E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2C7325A-6035-4A2C-B7C0-D47F944094E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4500FA6E-28E6-4113-ADCB-8148F645C595}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4500FA6E-28E6-4113-ADCB-8148F645C595}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4500FA6E-28E6-4113-ADCB-8148F645C595}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4500FA6E-28E6-4113-ADCB-8148F645C595}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

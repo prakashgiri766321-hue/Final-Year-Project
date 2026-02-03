@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TicketManagementSystem.Common\TicketManagementSystem.Common.csproj" />
+    <ProjectReference Include="..\TicketManagementSystem.Domain\TicketManagementSystem.Domain.csproj" />
+    <ProjectReference Include="..\TicketManagementSystem.Infrastructure\TicketManagementSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interface\" />
+    <Folder Include="Implementation\" />
+  </ItemGroup>
+
 </Project>
