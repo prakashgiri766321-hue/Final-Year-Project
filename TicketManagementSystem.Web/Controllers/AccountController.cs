@@ -43,13 +43,13 @@ namespace TicketManagementSystem.Web.Controllers
             return View(model);
         }
 
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Account");
         }
+
     }
 }

@@ -85,17 +85,27 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="logo">
-            🎫 TMS<br>
-            <small class="text-muted">Ticket Management System</small>
+    <div class="sidebar d-flex flex-column justify-content-between">
+        <div>
+            <div class="logo">
+                🎫 TMS<br>
+                <small class="text-muted">Ticket Management System</small>
+            </div>
+
+            <a class="active"><i class="fa fa-chart-pie me-2"></i> Dashboards</a>
+            <a><i class="fa fa-ticket me-2"></i> Tickets</a>
+            <a><i class="fa fa-file-alt me-2"></i> Forms & Policies</a>
+            <a><i class="fa fa-users me-2"></i> User Management</a>
         </div>
 
-
-        <a class="active"><i class="fa fa-chart-pie me-2"></i> Dashboards</a>
-        <a><i class="fa fa-ticket me-2"></i> Tickets</a>
-        <a><i class="fa fa-file-alt me-2"></i> Forms & Policies</a>
-        <a><i class="fa fa-users me-2"></i> User Management</a>
+        <div class="mb-3 text-center">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-link text-danger">
+                    <i class="fa fa-sign-out-alt me-2"></i> Logout
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="main">
