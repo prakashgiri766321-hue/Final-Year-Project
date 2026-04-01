@@ -22,6 +22,16 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    await DataSeeder.SeedRolesAsync(
+        services.GetRequiredService<RoleManager<IdentityRole>>()
+    );
+
+    await DataSeeder.SeedAdminAsync(services);
+}
 
 if (!app.Environment.IsDevelopment())
 {

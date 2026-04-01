@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using TicketManagementSystem.Infrastructure.Identity;
+using TicketManagementSystem.Common.Constants;
 
 namespace TicketManagementSystem.Infrastructure.SeedData
 {
@@ -11,7 +12,7 @@ namespace TicketManagementSystem.Infrastructure.SeedData
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            const string adminRole = "Admin";
+            const string adminRole = RoleConstants.Admin;
             const string adminEmail = "admin@tms.com";
             const string adminPassword = "Admin@123";
 
@@ -37,6 +38,24 @@ namespace TicketManagementSystem.Infrastructure.SeedData
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, adminRole);
+                }
+            }
+        }
+
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roles =
+            {
+            RoleConstants.Admin,
+            RoleConstants.Support,
+            RoleConstants.EndUser
+        };
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
             }
         }
