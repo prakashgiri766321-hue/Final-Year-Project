@@ -118,13 +118,15 @@
             <i class="fa fa-ticket me-2"></i> Tickets
         </a>
 
-        <a>
+        <a asp-controller="FormAndPolicies" asp-action="Index">
             <i class="fa fa-file-alt me-2"></i> Forms & Policies
         </a>
-
-        <a>
-            <i class="fa fa-users me-2"></i> User Management
-        </a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="UserManagement" asp-action="Index">
+                <i class="fa fa-users me-2"></i> User Management
+            </a>
+        }
 
     </div>
 
