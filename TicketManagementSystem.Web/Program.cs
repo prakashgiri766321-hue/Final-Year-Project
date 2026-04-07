@@ -18,19 +18,23 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login"; 
+    options.LoginPath = "/Account/Login";
 });
 
 var app = builder.Build();
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    await DataSeeder.SeedRolesAsync(
-        services.GetRequiredService<RoleManager<IdentityRole>>()
-    );
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
+    await DataSeeder.SeedRolesAsync(roleManager);
+  
     await DataSeeder.SeedAdminAsync(services);
+
+    await UserSeeder.SeedUsersAsync(userManager);
 }
 
 if (!app.Environment.IsDevelopment())
@@ -51,11 +55,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await DataSeeder.SeedAdminAsync(services);
-}
 
 app.Run();
