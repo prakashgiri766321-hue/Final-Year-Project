@@ -11,7 +11,6 @@ namespace TicketManagementSystem.Domain.Entities
         public IssueType IssueType { get; set; }    
         public TicketPriority Priority { get; set; }
         public TicketStatus Status { get; set; }
-
         public int BranchId {  get; set; }
         public Branch BranchName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
