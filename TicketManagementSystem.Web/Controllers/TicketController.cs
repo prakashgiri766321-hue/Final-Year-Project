@@ -20,7 +20,8 @@ namespace TicketManagementSystem.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var tickets = _ticketService.GetAllTickets();
+            return View(tickets);
         }
 
         [HttpGet]
@@ -41,6 +42,17 @@ namespace TicketManagementSystem.Web.Controllers
 
             LoadDropdowns();
             return View(dto);
+        }
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var ticket = _ticketService.GetTicketById(id);
+
+            if (ticket == null)
+                return NotFound();
+
+            return View(ticket);
         }
 
         private void LoadDropdowns()

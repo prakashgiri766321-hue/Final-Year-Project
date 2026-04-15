@@ -1,4 +1,5 @@
-﻿using TicketManagementSystem.Application.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using TicketManagementSystem.Application.DTOs;
 using TicketManagementSystem.Common.Enum;
 using TicketManagementSystem.Domain.Entities;
 using TicketManagementSystem.Infrastructure.Data;
@@ -27,5 +28,19 @@ public class TicketService : ITicketService
 
         _context.Tickets.Add(ticket);
         _context.SaveChanges();
+    }
+
+    public List<Ticket> GetAllTickets()
+    {
+        return _context.Tickets
+            .Include(x => x.BranchName)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToList();
+    }
+    public Ticket GetTicketById(int id)
+    {
+        return _context.Tickets
+            .Include(x => x.BranchName)
+            .FirstOrDefault(x => x.Id == id);
     }
 }
