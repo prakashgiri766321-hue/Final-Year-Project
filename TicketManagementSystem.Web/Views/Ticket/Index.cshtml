@@ -1,4 +1,7 @@
-﻿@{
+﻿@model List<TicketManagementSystem.Domain.Entities.Ticket>
+@using TicketManagementSystem.Common.Enum
+
+@{
     ViewData["Title"] = "Ticket List";
 }
 
@@ -6,7 +9,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
 <style>
-
     body {
         background: #f6f7fb;
         font-family: "Segoe UI",sans-serif;
@@ -47,8 +49,6 @@
         padding: 30px;
     }
 
-
-
     .ticket-table {
         background: white;
         border-radius: 10px;
@@ -59,7 +59,6 @@
     .search-box {
         width: 250px;
     }
-
 
     .status-open {
         background: #ffe5e8;
@@ -98,13 +97,10 @@
         .details-btn:hover {
             opacity: .9;
         }
-
 </style>
 
 <div class="sidebar d-flex flex-column justify-content-between">
-
     <div>
-
         <div class="logo">
             🎫 TMS<br>
             <small class="text-muted">Ticket Management System</small>
@@ -121,35 +117,28 @@
         <a asp-controller="FormAndPolicies" asp-action="Index">
             <i class="fa fa-file-alt me-2"></i> Forms & Policies
         </a>
+
         @if (User.IsInRole("Admin"))
         {
             <a asp-controller="UserManagement" asp-action="Index">
                 <i class="fa fa-users me-2"></i> User Management
             </a>
         }
-
     </div>
 
-
     <div class="mb-3 text-center">
-
         <form asp-controller="Account" asp-action="Logout" method="post">
             @Html.AntiForgeryToken()
-
             <button type="submit" class="btn btn-link text-danger">
                 <i class="fa fa-sign-out-alt me-2"></i> Logout
             </button>
-
         </form>
-
     </div>
-
 </div>
 
 <div class="main">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-
         <input type="text" class="form-control search-box" placeholder="Search Ticket">
 
         <div>
@@ -157,16 +146,13 @@
                 Create Ticket
             </a>
         </div>
-
     </div>
-
 
     <div class="ticket-table">
 
         <table class="table align-middle">
 
             <thead class="text-muted">
-
                 <tr>
                     <th>SN</th>
                     <th>TICKET NO.</th>
@@ -178,108 +164,61 @@
                     <th>REPORTED BY</th>
                     <th>ACTIONS</th>
                 </tr>
-
             </thead>
 
-
             <tbody>
+                @{
+                    int sn = 1;
+                }
 
-                <tr>
-                    <td>1</td>
-                    <td>0260310-BRJ-006</td>
-                    <td>Software</td>
-                    <td class="priority-high">High</td>
-                    <td><span class="status-open">Open</span></td>
-                    <td>-</td>
-                    <td>Birgunj H (BRJ)</td>
-                    <td>SUDHA BANIYA</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@sn</td>
 
-                <tr>
-                    <td>2</td>
-                    <td>0260310-KTM-005</td>
-                    <td>Software</td>
-                    <td class="priority-high">High</td>
-                    <td><span class="status-closed">Closed</span></td>
-                    <td>prakash</td>
-                    <td>HeadOffice (KTM)</td>
-                    <td>bijay</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td>#TKT-@item.Id</td>
 
-                <tr>
-                    <td>3</td>
-                    <td>0260310-EBRJ-004</td>
-                    <td>Software</td>
-                    <td class="priority-medium">Medium</td>
-                    <td><span class="status-closed">Closed</span></td>
-                    <td>karan</td>
-                    <td>Birgunj E (EBRJ)</td>
-                    <td>DEVENDRA PRASAD CHAURASIYA</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td>@item.IssueType</td>
 
-                <tr>
-                    <td>4</td>
-                    <td>0260310-GNB-003</td>
-                    <td>Network</td>
-                    <td class="priority-high">High</td>
-                    <td><span class="status-closed">Closed</span></td>
-                    <td>karan</td>
-                    <td>Gongabu H (GNB)</td>
-                    <td>SANGITA ADHIKARI</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td class="@(item.Priority == TicketPriority.High ? "priority-high" :
+                                                                        item.Priority == TicketPriority.Medium ? "priority-medium" : "")">
+                        @item.Priority
+                    </td>
 
-                <tr>
-                    <td>5</td>
-                    <td>0260310-KTM-002</td>
-                    <td>Software</td>
-                    <td class="priority-high">High</td>
-                    <td><span class="status-closed">Closed</span></td>
-                    <td>prakash</td>
-                    <td>HeadOffice (KTM)</td>
-                    <td>Bijay Shrestha</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td>
+                                <span class="@(item.Status == TicketStatus.Open ? "status-open" : "status-closed")">
+                                    @item.Status
+                                </span>
+                            </td>
 
-                <tr>
-                    <td>6</td>
-                    <td>0260310-LPT-001</td>
-                    <td>Software</td>
-                    <td class="priority-high">High</td>
-                    <td><span class="status-closed">Closed</span></td>
-                    <td>prakash</td>
-                    <td>Lagankhel (LPT)</td>
-                    <td>ABHISHEK KADAYAT</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td>-</td>
 
-                <tr>
-                    <td>7</td>
-                    <td>0260310-PKR-007</td>
-                    <td>Hardware</td>
-                    <td class="priority-medium">Medium</td>
-                    <td><span class="status-open">Open</span></td>
-                    <td>-</td>
-                    <td>Pokhara (PKR)</td>
-                    <td>Ramesh Gurung</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td>
+                                @(item.BranchName != null ? item.BranchName.BranchCode : "-")
+                            </td>
 
-                <tr>
-                    <td>8</td>
-                    <td>0260310-BRT-008</td>
-                    <td>Network</td>
-                    <td class="priority-high">High</td>
-                    <td><span class="status-open">Open</span></td>
-                    <td>Manoj</td>
-                    <td>Biratnagar (BRT)</td>
-                    <td>Anita Sharma</td>
-                    <td><button class="details-btn">Details</button></td>
-                </tr>
+                            <td>-</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="details-btn">
+                                    Details
+                                </a>
+                            </td>
+                           
+                        </tr>
 
+                                sn++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">
+                            No tickets found
+                        </td>
+                    </tr>
+                }
             </tbody>
 
         </table>
