@@ -3,19 +3,430 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TicketManagementSystem.Web</title>
+    <title>@ViewData["Title"] - Ticket Management System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TicketManagementSystem.Web.styles.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --tms-bg: #f5f7fb;
+            --tms-card-shadow: 0 16px 32px rgba(34, 41, 47, 0.11);
+            --tms-border: #e3e6ed;
+            --tms-primary: #6C47FF;
+            --tms-accent: #00D2D3;
+            --tms-sidebar-text: #181F33;
+            --tms-sidebar-bg: #181F33;
+            --tms-sidebar-focus: #222B47;
+            --tms-gradient: linear-gradient(90deg, #6C47FF 0%, #00D2D3 100%);
+        }
+
+        body {
+            background: var(--tms-bg);
+            font-family: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .tms-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .tms-sidebar {
+            width: 295px;
+            min-height: 100vh;
+            background: var(--tms-sidebar-bg);
+            border-right: 0;
+            box-shadow: 0 6px 40px #00000016;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            transition: width 0.2s;
+        }
+
+        .tms-brand {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 2rem 2rem 1rem 2rem;
+            border-bottom: 1px solid #252d4b;
+        }
+
+        .tms-brand-badge {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--tms-gradient);
+            color: #fff;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 1.35rem;
+            box-shadow: 0 4px 24px #00000022;
+        }
+
+        .tms-nav {
+            padding: 1.25rem 0;
+        }
+
+        .tms-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            border-radius: .75rem;
+            color: #fff;
+            background: transparent;
+            text-decoration: none;
+            margin: .2rem 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            font-size: 1.05rem;
+            transition: background .16s, color .16s;
+            position: relative;
+        }
+
+        .tms-nav a.active,
+        .tms-nav a:focus,
+        .tms-nav a:hover {
+            background: var(--tms-sidebar-focus);
+            color: var(--tms-accent);
+            box-shadow: 0 3px 12px #00d2d325;
+        }
+
+        .tms-nav a i {
+            font-size: 1.25em;
+        }
+
+        .tms-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--tms-bg);
+        }
+
+        .tms-topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--tms-border);
+            box-shadow: 0 2px 18px rgba(34, 41, 47, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .tms-content-padding {
+            padding: 2.5rem 3rem 2.5rem 3rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tms-card {
+            border: 0;
+            border-radius: 2.2rem;
+            background: #fff;
+            box-shadow: var(--tms-card-shadow);
+            padding: 2rem 2.5rem;
+        }
+
+        .tms-table {
+            background: #fff;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 2px 16px #6c47ff10;
+        }
+
+        .tms-table th, .tms-table td {
+            padding: 1.05rem 1.15rem;
+            vertical-align: middle;
+        }
+
+        .tms-table thead th {
+            font-size: .83rem;
+            text-transform: uppercase;
+            color: #98a3c3;
+            background: #f4f6fb;
+            border: 0;
+            letter-spacing: .07em;
+            font-weight: 800;
+            border-bottom: 2px solid var(--tms-border) !important;
+        }
+
+        .tms-table td {
+            background: transparent;
+            border-top: 1px solid var(--tms-border);
+            font-size: 1.07em;
+        }
+
+        .badge-soft {
+            border: 1px solid transparent;
+            font-weight: 700;
+            font-size: 1em;
+            border-radius: 16px;
+            padding: .33em 1.12em;
+            letter-spacing: .025em;
+            display: inline-flex !important;
+            align-items: center;
+            gap: .5em;
+            box-shadow: 0 2px 8px #222a4715;
+        }
+
+        /* Status colors (Open=red, Closed=green) */
+        .badge-open {
+            color: #ff4556;
+            background: #ffe8f0;
+            border-color: #ffd2e1;
+        }
+        .badge-closed {
+            color: #3baa75;
+            background: #e6faed;
+            border-color: #dcfceb;
+        }
+
+        /* Priority colors (High=red, Medium=orange, Low=green) */
+        .badge-priority-high {
+            color: #ff4556;
+            background: #ffe8f0;
+            border-color: #ffd2e1;
+        }
+        .badge-priority-medium {
+            color: #ffa429;
+            background: #fff7e7;
+            border-color: #ffe9c7;
+        }
+        .badge-priority-low {
+            color: #3baa75;
+            background: #e6faed;
+            border-color: #dcfceb;
+        }
+
+        .tms-btn-spacious {
+            padding: 0.68rem 2.2rem;
+            font-size: 1.05rem;
+            border-radius: 1.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            gap: .75em;
+            align-items: center;
+            box-shadow: 0 2px 12px #6c47ff27;
+        }
+
+        .tms-btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: .44em;
+        }
+
+        /* button palette */
+        .btn-primary {
+            background: var(--tms-primary);
+            border-color: var(--tms-primary);
+        }
+        .btn-warning {
+            background: #ffd93e;
+            color: #181f33;
+            border-color: #ffd93e;
+        }
+        .btn-success {
+            background: #3baa75;
+            border-color: #3baa75;
+        }
+
+        .tms-empty-state {
+            padding: 5rem 0;
+            text-align: center;
+            color: #c4cad9;
+        }
+        .tms-empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--tms-primary);
+            opacity: 0.68;
+        }
+        .tms-empty-state .fw-semibold,
+        .tms-empty-state .small {
+            color: #8e95b9;
+        }
+
+        @@media (max-width: 991.98px) {
+            .tms-sidebar {
+                display: none;
+            }
+            .tms-content-padding {
+                padding: 1.3rem 0.8rem;
+            }
+            .tms-card {
+                padding: 1.25rem 1rem;
+                border-radius: 1.2rem;
+            }
+            .tms-table th, .tms-table td {
+                padding: 0.7rem 0.55rem;
+                font-size: .96em;
+            }
+        }
+    </style>
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    <header>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @{
+        var controller = (ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty).ToLowerInvariant();
+        var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+
+        string NavClass(string c) => controller == c.ToLowerInvariant() ? "active" : "";
+    }
+
+    @if (!isAuthenticated)
+    {
+        <div class="container py-5">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <div class="tms-shell">
+            <!-- Desktop sidebar -->
+            <aside class="tms-sidebar d-none d-lg-flex flex-column justify-content-between">
+                <div>
+                    <div class="tms-brand">
+                        <div class="tms-brand-badge"><i class="fa-solid fa-layer-group"></i></div>
+                        <div class="lh-sm">
+                            <div class="fw-bold" style="font-size:1.4em; color:var(--tms-accent)">TicketMS</div>
+                            <div class="text-muted small" style="color:#c6cdf9 !important">Premium Ticket System</div>
+                        </div>
+                    </div>
+
+                    <nav class="tms-nav">
+                        <a class="@NavClass("home")" asp-controller="Home" asp-action="Index">
+                            <i class="fa-fw fa-solid fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a class="@NavClass("ticket")" asp-controller="Ticket" asp-action="Index">
+                            <i class="fa-fw fa-solid fa-ticket"></i>
+                            <span>Tickets</span>
+                        </a>
+                        <a class="@NavClass("formandpolicies")" asp-controller="FormAndPolicies" asp-action="Index">
+                            <i class="fa-fw fa-solid fa-file-contract"></i>
+                            <span>Forms &amp; Policies</span>
+                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="@NavClass("usermanagement")" asp-controller="UserManagement" asp-action="Index">
+                                <i class="fa-fw fa-solid fa-users-gear"></i>
+                                <span>User Management</span>
+                            </a>
+                        }
+                    </nav>
+                </div>
+
+                <div class="p-3">
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger w-100 tms-btn-spacious" style="border-radius:1.5rem;">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Mobile offcanvas sidebar -->
+            <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="tmsSidebar" aria-labelledby="tmsSidebarLabel">
+                <div class="offcanvas-header" style="background:var(--tms-sidebar-bg);">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="tms-brand-badge"><i class="fa-solid fa-layer-group"></i></div>
+                        <div class="lh-sm">
+                            <div class="fw-bold" id="tmsSidebarLabel" style="font-size:1.2em; color:var(--tms-accent)">TicketMS</div>
+                            <div class="text-muted small" style="color:#c6cdf9 !important">Premium Ticket System</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body d-flex flex-column justify-content-between" style="background:var(--tms-sidebar-bg);">
+                    <nav class="tms-nav">
+                        <a class="@NavClass("home")" asp-controller="Home" asp-action="Index">
+                            <i class="fa-fw fa-solid fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a class="@NavClass("ticket")" asp-controller="Ticket" asp-action="Index">
+                            <i class="fa-fw fa-solid fa-ticket"></i>
+                            <span>Tickets</span>
+                        </a>
+                        <a class="@NavClass("formandpolicies")" asp-controller="FormAndPolicies" asp-action="Index">
+                            <i class="fa-fw fa-solid fa-file-contract"></i>
+                            <span>Forms &amp; Policies</span>
+                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="@NavClass("usermanagement")" asp-controller="UserManagement" asp-action="Index">
+                                <i class="fa-fw fa-solid fa-users-gear"></i>
+                                <span>User Management</span>
+                            </a>
+                        }
+                    </nav>
+                    <div class="pt-3">
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger w-100 tms-btn-spacious" style="border-radius:1.25rem;">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tms-content">
+                <div class="tms-topbar">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center justify-content-between py-3 px-2 px-md-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn btn-outline-primary d-lg-none tms-btn-spacious px-3 py-2" type="button"
+                                        data-bs-toggle="offcanvas" data-bs-target="#tmsSidebar" aria-controls="tmsSidebar"
+                                        style="border-radius:1.3rem;">
+                                    <i class="fa-solid fa-bars"></i>
+                                </button>
+                                <div>
+                                    <div class="fw-bold" style="font-size:1.35em; color:#2a3084; letter-spacing:.025em;">
+                                        @ViewData["Title"]
+                                    </div>
+                                    <div class="text-muted small ms-1">
+                                        @(ViewData["Subtitle"]?.ToString() ?? "Welcome back")
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-none d-md-flex align-items-center text-muted small">
+                                    <div class="me-2"
+                                         style="width:40px;height:40px;border-radius:14px;background:var(--tms-gradient);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">
+                                        <i class="fa-regular fa-user"></i>
+                                    </div>
+                                    <span>@(User?.Identity?.Name ?? "User")</span>
+                                </div>
+
+                                @if (IsSectionDefined("PageActions"))
+                                {
+                                    @RenderSection("PageActions", required: false)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tms-content-padding">
+                    <main role="main">
+                        @RenderBody()
+                    </main>
+                </div>
+            </div>
+        </div>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

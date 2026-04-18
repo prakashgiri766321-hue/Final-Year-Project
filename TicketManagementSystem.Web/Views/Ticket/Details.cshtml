@@ -3,77 +3,103 @@
 
 @{
     ViewData["Title"] = "Ticket Details";
+    ViewData["Subtitle"] = $"#TKT-{Model?.Id}";
 }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+@section PageActions {
+    <a asp-action="Index" class="btn btn-outline-secondary tms-btn-spacious" style="border-radius:1.4rem;">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </a>
+}
 
-<div class="container mt-5">
+@{
+    var statusBadgeClass = Model.Status == TicketStatus.Open ? "badge-open" : "badge-closed";
+    var priorityBadgeClass =
+        Model.Priority == TicketPriority.High ? "badge-priority-high" :
+        Model.Priority == TicketPriority.Medium ? "badge-priority-medium" :
+        "badge-priority-low";
+}
 
-    <div class="card shadow-lg border-0 rounded-3">
-        <div class="card-header bg-primary text-white d-flex justify-content-between">
-            <h4 class="mb-0">Ticket Details</h4>
-            <a asp-action="Index" class="btn btn-light btn-sm">Back</a>
-        </div>
-
-        <div class="card-body">
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="fw-bold">Ticket No:</label>
-                    <p>#TKT-@Model.Id</p>
+<div class="tms-card">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                <div>
+                    <div class="h4 fw-bold mb-1">
+                        <i class="fa-solid fa-ticket text-primary me-2"></i>Ticket #TKT-@Model.Id
+                    </div>
+                    <div class="text-muted small">@Model.Title</div>
                 </div>
-
-                <div class="col-md-6">
-                    <label class="fw-bold">Status:</label><br />
-                    <span class="badge @(Model.Status == TicketStatus.Open ? "bg-danger" : "bg-success")">
-                        @Model.Status
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <span class="badge badge-soft @priorityBadgeClass">
+                        <i class="fa-solid fa-flag"></i> @Model.Priority
+                    </span>
+                    <span class="badge badge-soft @statusBadgeClass">
+                        <i class="fa-solid fa-bolt"></i> @Model.Status
                     </span>
                 </div>
             </div>
+        </div>
 
-            <div class="mb-3">
-                <label class="fw-bold">Title:</label>
-                <p>@Model.Title</p>
-            </div>
-
-            <div class="mb-3">
-                <label class="fw-bold">Description:</label>
-                <p>@Model.Description</p>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="fw-bold">Issue Type:</label>
-                    <p>@Model.IssueType</p>
+        <div class="col-12 col-lg-7">
+            <div class="p-3 p-md-4 border rounded-4" style="border-color:var(--tms-border)!important;">
+                <div class="fw-bold mb-3">
+                    <i class="fa-regular fa-circle-info text-primary me-2"></i>General Info
                 </div>
 
-                <div class="col-md-4">
-                    <label class="fw-bold">Priority:</label>
-                    <p class="@(Model.Priority == TicketPriority.High ? "text-danger" :
-                                                       Model.Priority == TicketPriority.Medium ? "text-warning" : "text-success")">
-                        @Model.Priority
-                    </p>
+                <div class="mb-3">
+                    <div class="text-muted small fw-semibold">Description</div>
+                    <div class="mt-1">@Model.Description</div>
                 </div>
 
-                <div class="col-md-4">
-                    <label class="fw-bold">Branch:</label>
-                    <p>@(Model.BranchName?.BranchCode ?? "-")</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="fw-bold">Created At:</label>
-                    <p>@Model.CreatedAt.ToString("yyyy-MM-dd hh:mm tt")</p>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="fw-bold">Resolved At:</label>
-                    <p>@(Model.ResolvedAt.HasValue? Model.ResolvedAt.Value.ToString("yyyy-MM-dd hh:mm tt") : "-")</p>
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted small fw-semibold">Issue Type</div>
+                        <div class="mt-1">@Model.IssueType</div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted small fw-semibold">Branch</div>
+                        <div class="mt-1">@(Model.BranchName?.BranchCode ?? "-")</div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="text-muted small fw-semibold">Priority</div>
+                        <div class="mt-1">
+                            <span class="badge badge-soft @priorityBadgeClass">@Model.Priority</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
+        <div class="col-12 col-lg-5">
+            <div class="p-3 p-md-4 border rounded-4" style="border-color:var(--tms-border)!important;">
+                <div class="fw-bold mb-3">
+                    <i class="fa-regular fa-clock text-primary me-2"></i>Timeline
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-muted small fw-semibold">Created At</div>
+                    <div class="fw-semibold">@Model.CreatedAt.ToString("yyyy-MM-dd hh:mm tt")</div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small fw-semibold">Resolved At</div>
+                    <div class="fw-semibold">@(Model.ResolvedAt.HasValue ? Model.ResolvedAt.Value.ToString("yyyy-MM-dd hh:mm tt") : "-")</div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="fw-bold mb-3">
+                    <i class="fa-regular fa-circle-check text-primary me-2"></i>Status Info
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small fw-semibold">Current Status</div>
+                    <div>
+                        <span class="badge badge-soft @statusBadgeClass">@Model.Status</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
