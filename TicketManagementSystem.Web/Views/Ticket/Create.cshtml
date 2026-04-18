@@ -1,77 +1,80 @@
 ﻿@using TicketManagementSystem.Common.Enum
 @model TicketManagementSystem.Application.DTOs.CreateTicketDto
 
-<div class="container mt-5">
+@{
+    ViewData["Title"] = "Create Ticket";
+    ViewData["Subtitle"] = "Log a new issue quickly";
+}
+
+@section PageActions {
+    <a asp-action="Index" class="btn btn-outline-secondary tms-btn-spacious" style="border-radius:1.4rem;">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </a>
+}
+
+<div class="tms-card">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-
-            <div class="card shadow-lg border-0 rounded-3">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Create Ticket</h4>
+        <div class="col-lg-9 col-xl-8">
+            <div class="mb-4">
+                <div class="h4 fw-bold mb-1">
+                    <i class="fa-solid fa-circle-plus text-primary me-2"></i>Create Ticket
                 </div>
-
-                <div class="card-body">
-
-                    <form asp-action="Create" method="post">
-
-                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input asp-for="Title" class="form-control" placeholder="Enter title" />
-                            <span asp-validation-for="Title" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="4"
-                                      placeholder="Describe the issue..."></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Issue Type</label>
-                            <select asp-for="IssueType" class="form-select"
-                                    asp-items="Html.GetEnumSelectList<IssueType>()">
-                                <option value="">-- Select Issue Type --</option>
-                            </select>
-                            <span asp-validation-for="IssueType" class="text-danger"></span>
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select asp-for="Priority" class="form-select"
-                                    asp-items="Html.GetEnumSelectList<TicketPriority>()">
-                                <option value="">-- Select Priority --</option>
-                            </select>
-                            <span asp-validation-for="Priority" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label">Branch</label>
-                            <select asp-for="BranchId" class="form-select"
-                                    asp-items="ViewBag.Branches">
-                                <option value="">-- Select Branch --</option>
-                            </select>
-                            <span asp-validation-for="BranchId" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Index" class="btn btn-outline-secondary">
-                                Back
-                            </a>
-
-                            <button type="submit" class="btn btn-success px-4">
-                                Create Ticket
-                            </button>
-                        </div>
-
-                    </form>
-
-                </div>
+                <div class="text-muted small">Provide details so the right team can pick it up quickly.</div>
             </div>
 
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Title</label>
+                        <input asp-for="Title" class="form-control" placeholder="e.g., Email not syncing" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="5" placeholder="Describe what happened, what you expected, and any steps to reproduce."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label fw-semibold">Issue Type</label>
+                        <select asp-for="IssueType" class="form-select" asp-items="Html.GetEnumSelectList<IssueType>()">
+                            <option value="">-- Select Issue Type --</option>
+                        </select>
+                        <span asp-validation-for="IssueType" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label fw-semibold">Priority</label>
+                        <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TicketPriority>()">
+                            <option value="">-- Select Priority --</option>
+                        </select>
+                        <span asp-validation-for="Priority" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label fw-semibold">Branch</label>
+                        <select asp-for="BranchId" class="form-select" asp-items="ViewBag.Branches">
+                            <option value="">-- Select Branch --</option>
+                        </select>
+                        <span asp-validation-for="BranchId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary tms-btn-icon">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back
+                    </a>
+                    <button type="submit" class="btn btn-success tms-btn-icon px-4">
+                        <i class="fa-solid fa-check"></i>
+                        Create Ticket
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
