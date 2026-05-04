@@ -8,10 +8,14 @@ namespace TicketManagementSystem.Web.Controllers
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager)
+        public AccountController(
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -27,8 +31,20 @@ namespace TicketManagementSystem.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            var loginValue = model.Email?.Trim() ?? string.Empty;
+
+            // Allow login using email (primary) and username (fallback).
+            var user = await _userManager.FindByEmailAsync(loginValue)
+                       ?? await _userManager.FindByNameAsync(loginValue);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid email or password");
+                return View(model);
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email,
+                user,
                 model.Password,
                 model.RememberMe,
                 lockoutOnFailure: false

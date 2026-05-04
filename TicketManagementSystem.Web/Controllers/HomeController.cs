@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TicketManagementSystem.Application.DTOs;
 using TicketManagementSystem.Web.Models;
 
 namespace TicketManagementSystem.Web.Controllers
@@ -9,15 +10,18 @@ namespace TicketManagementSystem.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ITicketService _ticketService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ITicketService ticketService)
         {
             _logger = logger;
+            _ticketService = ticketService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            DashboardStatisticsDto dashboardData = _ticketService.GetDashboardStatistics();
+            return View(dashboardData);
         }
 
 

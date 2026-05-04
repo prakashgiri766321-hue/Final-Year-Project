@@ -1,16 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TicketManagementSystem.Application.DTOs;
+﻿using TicketManagementSystem.Application.DTOs;
 using TicketManagementSystem.Common.Enum;
 using TicketManagementSystem.Domain.Entities;
-using TicketManagementSystem.Infrastructure.Data;
+using TicketManagementSystem.Domain.Interface;
 
 public class TicketService : ITicketService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ITicketRepository _ticketRepository;
 
-    public TicketService(ApplicationDbContext context)
+    public TicketService(ITicketRepository ticketRepository)
     {
-        _context = context;
+        _ticketRepository = ticketRepository;
     }
 
     public void CreateTicket(CreateTicketDto dto)
@@ -28,43 +27,40 @@ public class TicketService : ITicketService
             CreatedById=dto.CreatedById
         };
 
-        _context.Tickets.Add(ticket);
-        _context.SaveChanges();
+        _ticketRepository.Add(ticket);
+        _ticketRepository.SaveChanges();
     }
     public void AssignTicket(int ticketId, string userId)
     {
-        var ticket = _context.Tickets.Find(ticketId);
+        var ticket = _ticketRepository.GetById(ticketId);
 
         if (ticket == null) return;
 
         ticket.AssignedToId = userId;
 
-        _context.SaveChanges();
+        _ticketRepository.SaveChanges();
     }
 
     public void ResolveTicket(int id)
     {
-        var ticket = _context.Tickets.Find(id);
+        var ticket = _ticketRepository.GetById(id);
 
         if (ticket == null) return;
 
         ticket.Status = TicketStatus.Closed;
         ticket.ResolvedAt = DateTime.UtcNow;
 
-        _context.SaveChanges();
+        _ticketRepository.SaveChanges();
     }
 
     public List<Ticket> GetAllTickets()
     {
-        return _context.Tickets
-            .Include(x => x.BranchName)
-            .OrderByDescending(x => x.CreatedAt)
-            .ToList();
+        return _ticketRepository.GetAllWithBranchOrderedDesc();
     }
 
     public PaginatedResult<Ticket> GetTicketsPaged(TicketFilterDto filter, string? currentUserId)
     {
-        IQueryable<Ticket> query = _context.Tickets.AsNoTracking().Include(x => x.BranchName);
+        IQueryable<Ticket> query = _ticketRepository.QueryWithBranch();
 
         if (filter.Status.HasValue)
             query = query.Where(t => t.Status == filter.Status.Value);
@@ -102,10 +98,54 @@ public class TicketService : ITicketService
             PageSize = pageSize
         };
     }
-    public Ticket GetTicketById(int id)
+    public Ticket? GetTicketById(int id)
     {
-        return _context.Tickets
-            .Include(x => x.BranchName)
-            .FirstOrDefault(x => x.Id == id);
+        return _ticketRepository.GetByIdWithBranch(id);
+    }
+
+    public List<TicketCategoryCountDto> GetTicketCategoryCounts()
+    {
+        var grouped = _ticketRepository.Query()
+            .GroupBy(t => t.IssueType)
+            .Select(g => new { IssueType = g.Key, Count = g.Count() })
+            .ToDictionary(x => x.IssueType, x => x.Count);
+
+        return new List<TicketCategoryCountDto>
+        {
+            new() { Category = "Hardware", Count = grouped.GetValueOrDefault(IssueType.Hardware, 0) },
+            new() { Category = "Software", Count = grouped.GetValueOrDefault(IssueType.Software, 0) },
+            new() { Category = "Network", Count = grouped.GetValueOrDefault(IssueType.Network, 0) }
+        };
+    }
+
+    public List<MonthlyTicketCountDto> GetMonthlyTicketCreationStats()
+    {
+        return _ticketRepository.Query()
+            .GroupBy(t => new { t.CreatedAt.Year, t.CreatedAt.Month })
+            .Select(g => new { g.Key.Year, g.Key.Month, Count = g.Count() })
+            .OrderBy(x => x.Year)
+            .ThenBy(x => x.Month)
+            .AsEnumerable()
+            .Select(x => new MonthlyTicketCountDto
+            {
+                Month = new DateTime(x.Year, x.Month, 1).ToString("MMM yyyy"),
+                Count = x.Count
+            })
+            .ToList();
+    }
+
+    public DashboardStatisticsDto GetDashboardStatistics()
+    {
+        var query = _ticketRepository.Query();
+
+        return new DashboardStatisticsDto
+        {
+            TotalTickets = query.Count(),
+            OpenTickets = query.Count(t => t.Status == TicketStatus.Open),
+            InProgressTickets = query.Count(t => t.Status == TicketStatus.InProgress),
+            ClosedTickets = query.Count(t => t.Status == TicketStatus.Closed || t.Status == TicketStatus.Resolved),
+            CategoryCounts = GetTicketCategoryCounts(),
+            MonthlyTicketCounts = GetMonthlyTicketCreationStats()
+        };
     }
 }
