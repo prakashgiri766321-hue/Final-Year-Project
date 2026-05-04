@@ -1,23 +1,26 @@
-﻿@{
+﻿@model List<TicketManagementSystem.Infrastructure.Identity.ApplicationUser>
+
+@{
     ViewData["Title"] = "User Management";
     ViewData["Subtitle"] = "Manage access and roles";
+
+    var roleMap = ViewBag.UserRoles as Dictionary<string, string> ?? new Dictionary<string, string>();
+    var sn = 1;
 }
 @section PageActions {
-    <button class="btn btn-primary tms-btn-spacious" style="border-radius:1.4rem;" disabled>
+    <a asp-action="Create" class="btn btn-primary tms-btn-spacious" style="border-radius:1.4rem;">
         <i class="fa-solid fa-user-plus"></i>
         Add New User
-    </button>
+    </a>
 }
 
 <div class="tms-card">
-    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-        <div class="input-group" style="max-width:360px;">
-            <span class="input-group-text bg-white">
-                <i class="fa-solid fa-magnifying-glass text-muted"></i>
-            </span>
-            <input type="text" class="form-control" placeholder="Search user (UI only)" disabled />
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success mb-3">
+            @TempData["SuccessMessage"]
         </div>
-    </div>
+    }
 
     <div class="table-responsive">
         <table class="table align-middle tms-table mb-0">
@@ -32,58 +35,47 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="text-muted fw-bold">1</td>
-                    <td class="fw-semibold">Admin User</td>
-                    <td class="text-muted">admin@tms.com</td>
-                    <td><span class="badge badge-soft badge-open"><i class="fa-solid fa-shield-halved"></i> Admin</span></td>
-                    <td><span class="badge badge-soft badge-closed"><i class="fa-solid fa-circle-check"></i> Active</span></td>
-                    <td>
-                        <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-sm btn-warning tms-btn-icon" disabled><i class="fa-regular fa-pen-to-square"></i> Edit</button>
-                            <button class="btn btn-sm btn-danger tms-btn-icon" disabled><i class="fa-regular fa-trash-can"></i> Delete</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-muted fw-bold">2</td>
-                    <td class="fw-semibold">Prakash Sharma</td>
-                    <td class="text-muted">prakash@gmail.com</td>
-                    <td><span class="badge badge-soft badge-priority-medium"><i class="fa-regular fa-user"></i> User</span></td>
-                    <td><span class="badge badge-soft badge-closed"><i class="fa-solid fa-circle-check"></i> Active</span></td>
-                    <td>
-                        <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-sm btn-warning tms-btn-icon" disabled><i class="fa-regular fa-pen-to-square"></i> Edit</button>
-                            <button class="btn btn-sm btn-danger tms-btn-icon" disabled><i class="fa-regular fa-trash-can"></i> Delete</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-muted fw-bold">3</td>
-                    <td class="fw-semibold">Bijay Shrestha</td>
-                    <td class="text-muted">bijay@gmail.com</td>
-                    <td><span class="badge badge-soft badge-priority-medium"><i class="fa-regular fa-user"></i> User</span></td>
-                    <td><span class="badge badge-soft badge-open"><i class="fa-solid fa-circle-xmark"></i> Inactive</span></td>
-                    <td>
-                        <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-sm btn-warning tms-btn-icon" disabled><i class="fa-regular fa-pen-to-square"></i> Edit</button>
-                            <button class="btn btn-sm btn-danger tms-btn-icon" disabled><i class="fa-regular fa-trash-can"></i> Delete</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-muted fw-bold">4</td>
-                    <td class="fw-semibold">Anita Sharma</td>
-                    <td class="text-muted">anita@gmail.com</td>
-                    <td><span class="badge badge-soft badge-priority-medium"><i class="fa-regular fa-user"></i> User</span></td>
-                    <td><span class="badge badge-soft badge-closed"><i class="fa-solid fa-circle-check"></i> Active</span></td>
-                    <td>
-                        <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-sm btn-warning tms-btn-icon" disabled><i class="fa-regular fa-pen-to-square"></i> Edit</button>
-                            <button class="btn btn-sm btn-danger tms-btn-icon" disabled><i class="fa-regular fa-trash-can"></i> Delete</button>
-                        </div>
-                    </td>
-                </tr>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var user in Model)
+                    {
+                        var role = roleMap.TryGetValue(user.Id, out var value) ? value : "-";
+                        var roleBadgeClass = role == "Admin" ? "badge-open" : "badge-priority-medium";
+
+                        <tr>
+                            <td class="text-muted fw-bold">@sn</td>
+                            <td class="fw-semibold">@user.UserName</td>
+                            <td class="text-muted">@user.Email</td>
+                            <td>
+                                <span class="badge badge-soft @roleBadgeClass">
+                                    <i class="fa-solid fa-user-shield"></i> @role
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-soft badge-closed">
+                                    <i class="fa-solid fa-circle-check"></i> Active
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-muted small">-</span>
+                            </td>
+                        </tr>
+
+                        sn++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">
+                            <div class="tms-empty-state">
+                                <i class="fa-regular fa-folder-open"></i>
+                                <div class="fw-semibold mt-2">No users found</div>
+                                <div class="small mt-1">Create a new user to get started.</div>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

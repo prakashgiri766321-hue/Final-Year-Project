@@ -7,7 +7,10 @@ public interface ITicketService
     void CreateTicket(CreateTicketDto dto);
     List<Ticket> GetAllTickets();
     PaginatedResult<Ticket> GetTicketsPaged(TicketFilterDto filter, string? currentUserId);
-    Ticket GetTicketById(int id);
+    Ticket? GetTicketById(int id);
     void AssignTicket(int ticketId, string userId);
     void ResolveTicket(int id);
+    List<TicketCategoryCountDto> GetTicketCategoryCounts();
+    List<MonthlyTicketCountDto> GetMonthlyTicketCreationStats();
+    DashboardStatisticsDto GetDashboardStatistics();
 }

@@ -6,6 +6,23 @@
     ViewData["Subtitle"] = "Log a new issue quickly";
 }
 
+@section Styles {
+    <style>
+        .create-card {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .create-label {
+            font-weight: 600;
+            margin-bottom: .45rem;
+        }
+        .create-icon {
+            min-width: 46px;
+            justify-content: center;
+        }
+    </style>
+}
+
 @section PageActions {
     <a asp-action="Index" class="btn btn-outline-secondary tms-btn-spacious" style="border-radius:1.4rem;">
         <i class="fa-solid fa-arrow-left"></i>
@@ -13,9 +30,9 @@
     </a>
 }
 
-<div class="tms-card">
+<div class="tms-card create-card">
     <div class="row justify-content-center">
-        <div class="col-lg-9 col-xl-8">
+        <div class="col-12">
             <div class="mb-4">
                 <div class="h4 fw-bold mb-1">
                     <i class="fa-solid fa-circle-plus text-primary me-2"></i>Create Ticket
@@ -28,38 +45,63 @@
 
                 <div class="row g-3">
                     <div class="col-12">
-                        <label class="form-label fw-semibold">Title</label>
-                        <input asp-for="Title" class="form-control" placeholder="e.g., Email not syncing" />
+                        <label class="form-label create-label">Title</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white create-icon">
+                                <i class="fa-solid fa-heading text-muted"></i>
+                            </span>
+                            <input asp-for="Title" class="form-control" placeholder="e.g., Email not syncing" />
+                        </div>
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
 
                     <div class="col-12">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea asp-for="Description" class="form-control" rows="5" placeholder="Describe what happened, what you expected, and any steps to reproduce."></textarea>
+                        <label class="form-label create-label">Description</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white create-icon align-items-start pt-3">
+                                <i class="fa-regular fa-file-lines text-muted"></i>
+                            </span>
+                            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Describe what happened, what you expected, and any steps to reproduce."></textarea>
+                        </div>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
                     <div class="col-12 col-md-4">
-                        <label class="form-label fw-semibold">Issue Type</label>
-                        <select asp-for="IssueType" class="form-select" asp-items="Html.GetEnumSelectList<IssueType>()">
-                            <option value="">-- Select Issue Type --</option>
-                        </select>
+                        <label class="form-label create-label">Issue Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white create-icon">
+                                <i class="fa-solid fa-circle-question text-muted"></i>
+                            </span>
+                            <select asp-for="IssueType" class="form-select" asp-items="Html.GetEnumSelectList<IssueType>()">
+                                <option value="">-- Select Issue Type --</option>
+                            </select>
+                        </div>
                         <span asp-validation-for="IssueType" class="text-danger"></span>
                     </div>
 
                     <div class="col-12 col-md-4">
-                        <label class="form-label fw-semibold">Priority</label>
-                        <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TicketPriority>()">
-                            <option value="">-- Select Priority --</option>
-                        </select>
+                        <label class="form-label create-label">Priority</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white create-icon">
+                                <i class="fa-solid fa-flag text-muted"></i>
+                            </span>
+                            <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TicketPriority>()">
+                                <option value="">-- Select Priority --</option>
+                            </select>
+                        </div>
                         <span asp-validation-for="Priority" class="text-danger"></span>
                     </div>
 
                     <div class="col-12 col-md-4">
-                        <label class="form-label fw-semibold">Branch</label>
-                        <select asp-for="BranchId" class="form-select" asp-items="ViewBag.Branches">
-                            <option value="">-- Select Branch --</option>
-                        </select>
+                        <label class="form-label create-label">Branch</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white create-icon">
+                                <i class="fa-solid fa-building text-muted"></i>
+                            </span>
+                            <select asp-for="BranchId" class="form-select" asp-items="ViewBag.Branches">
+                                <option value="">-- Select Branch --</option>
+                            </select>
+                        </div>
                         <span asp-validation-for="BranchId" class="text-danger"></span>
                     </div>
                 </div>

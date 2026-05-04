@@ -2,65 +2,101 @@
     ViewData["Title"] = "Forms & Policies";
     ViewData["Subtitle"] = "Quick access to documents and policies";
 }
-@section PageActions {
-    <button class="btn btn-primary tms-btn-spacious" style="border-radius:1.4rem;" disabled>
-        <i class="fa-solid fa-plus"></i>
-        Add New
-    </button>
-}
 
-<div class="tms-card">
-    <div class="table-responsive">
-        <table class="table align-middle tms-table mb-0">
-            <thead>
-                <tr>
-                    <th style="width:80px;">SN</th>
-                    <th>NAME</th>
-                    <th style="width:180px;">LAST UPDATED</th>
-                    <th style="width:260px;">ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    var rows = new[]
-                    {
-                        new { Name = "Document Control Policy", Date = "15/11/2024" },
-                        new { Name = "IT Policy", Date = "15/11/2024" },
-                        new { Name = "Internet Usage Policy", Date = "15/11/2024" },
-                        new { Name = "IT Security Policy", Date = "15/11/2024" },
-                        new { Name = "Email Usage Policy", Date = "15/11/2024" },
-                        new { Name = "Network Security Policy", Date = "15/11/2024" },
-                    };
-                    var sn = 1;
-                }
+<div class="tms-card p-4">
+    <div class="row g-4">
 
-                @foreach (var r in rows)
-                {
-                    <tr>
-                        <td class="text-muted fw-bold">@sn</td>
-                        <td>
-                            <span class="fw-semibold">
-                                <i class="fa-solid fa-file-lines text-primary me-2"></i>@r.Name
-                            </span>
-                        </td>
-                        <td class="text-muted">@r.Date</td>
-                        <td>
-                            <div class="d-flex flex-wrap gap-2">
-                                <button class="btn btn-sm btn-primary tms-btn-icon" disabled>
-                                    <i class="fa-regular fa-eye"></i> Preview
-                                </button>
-                                <button class="btn btn-sm btn-warning tms-btn-icon" disabled>
-                                    <i class="fa-regular fa-pen-to-square"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-danger tms-btn-icon" disabled>
-                                    <i class="fa-regular fa-trash-can"></i> Delete
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    sn++;
-                }
-            </tbody>
-        </table>
+        <div class="col-md-6">
+            <div class="p-4 h-100 rounded-4 shadow-sm border policy-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-ticket text-primary me-2"></i>
+                    Ticket Usage Policy
+                </h5>
+                <ul class="mb-0 text-muted">
+                    <li>Provide clear and descriptive issue titles</li>
+                    <li>Include detailed explanation of the problem</li>
+                    <li>Select correct category (hardware/software/network)</li>
+                    <li>Avoid duplicate tickets for the same issue</li>
+                    <li>Attach screenshots or logs when necessary</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-4 h-100 rounded-4 shadow-sm border policy-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-clock text-primary me-2"></i>
+                    Priority & SLA Policy
+                </h5>
+                <ul class="mb-0 text-muted">
+                    <li>High: Critical system failure (fast response)</li>
+                    <li>Medium: Partial system issue</li>
+                    <li>Low: General requests</li>
+                    <li>Response time depends on priority level</li>
+                    <li>IT team handles tickets based on urgency</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-4 h-100 rounded-4 shadow-sm border policy-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-user-check text-primary me-2"></i>
+                    User Responsibility Policy
+                </h5>
+                <ul class="mb-0 text-muted">
+                    <li>Provide accurate and complete information</li>
+                    <li>Be available for follow-up if required</li>
+                    <li>Avoid misuse of the ticketing system</li>
+                    <li>Maintain proper communication etiquette</li>
+                    <li>Ensure issue is valid before submission</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-4 h-100 rounded-4 shadow-sm border policy-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-screwdriver-wrench text-primary me-2"></i>
+                    IT Support Scope Policy
+                </h5>
+                <ul class="mb-0 text-muted">
+                    <li>Covers company systems and hardware only</li>
+                    <li>Includes network and internal software issues</li>
+                    <li>Does not include personal devices</li>
+                    <li>Non-work-related issues may be rejected</li>
+                    <li>Out-of-scope requests will not be processed</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-4 h-100 rounded-4 shadow-sm border policy-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fa-solid fa-check-circle text-primary me-2"></i>
+                    Ticket Resolution & Closure Policy
+                </h5>
+                <ul class="mb-0 text-muted">
+                    <li>Tickets marked resolved after issue is fixed</li>
+                    <li>Users are notified upon resolution</li>
+                    <li>Tickets auto-close after inactivity</li>
+                    <li>Users can reopen if issue persists</li>
+                    <li>Closed tickets remain for reference</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 </div>
+
+<style>
+    .policy-card {
+        transition: all 0.2s ease-in-out;
+        background-color: #fff;
+    }
+
+        .policy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+</style>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TicketManagementSystem.Domain.Interface;
 using TicketManagementSystem.Infrastructure.Data;
 using TicketManagementSystem.Infrastructure.Identity;
 using TicketManagementSystem.Infrastructure.SeedData;
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

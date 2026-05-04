@@ -1,4 +1,7 @@
-﻿@{
+﻿@using System.Text.Json
+@model TicketManagementSystem.Application.DTOs.DashboardStatisticsDto
+
+@{
     ViewData["Title"] = "Dashboard";
     ViewData["Subtitle"] = "Overview of your system";
 }
@@ -8,25 +11,25 @@
         <div class="col-12 col-md-3">
             <div class="p-4 rounded-4 border" style="border-color:var(--tms-border)!important;">
                 <div class="text-muted small fw-semibold">Total Tickets</div>
-                <div class="display-6 fw-bold mt-1">165</div>
+                <div class="display-6 fw-bold mt-1">@Model.TotalTickets</div>
             </div>
         </div>
         <div class="col-12 col-md-3">
             <div class="p-4 rounded-4 border" style="border-color:var(--tms-border)!important;">
                 <div class="text-muted small fw-semibold">Open</div>
-                <div class="display-6 fw-bold mt-1">0</div>
+                <div class="display-6 fw-bold mt-1">@Model.OpenTickets</div>
             </div>
         </div>
         <div class="col-12 col-md-3">
             <div class="p-4 rounded-4 border" style="border-color:var(--tms-border)!important;">
                 <div class="text-muted small fw-semibold">In Progress</div>
-                <div class="display-6 fw-bold mt-1">12</div>
+                <div class="display-6 fw-bold mt-1">@Model.InProgressTickets</div>
             </div>
         </div>
         <div class="col-12 col-md-3">
             <div class="p-4 rounded-4 border" style="border-color:var(--tms-border)!important;">
                 <div class="text-muted small fw-semibold">Closed</div>
-                <div class="display-6 fw-bold mt-1">153</div>
+                <div class="display-6 fw-bold mt-1">@Model.ClosedTickets</div>
             </div>
         </div>
     </div>
@@ -37,7 +40,9 @@
                 <div class="fw-bold mb-3">
                     <i class="fa-solid fa-chart-pie text-primary me-2"></i>Ticket Details
                 </div>
-                <div class="text-muted small">Charts are UI placeholders.</div>
+                <div style="height: 280px;">
+                    <canvas id="ticketCategoryChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-12 col-lg-8">
@@ -45,8 +50,77 @@
                 <div class="fw-bold mb-3">
                     <i class="fa-solid fa-chart-line text-primary me-2"></i>Tickets Over Time
                 </div>
-                <div class="text-muted small">Charts are UI placeholders.</div>
+                <div style="height: 280px;">
+                    <canvas id="ticketTrendChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const categoryData = @Html.Raw(JsonSerializer.Serialize(Model.CategoryCounts));
+        const monthlyData = @Html.Raw(JsonSerializer.Serialize(Model.MonthlyTicketCounts));
+
+        const categoryChartLabels = categoryData.map(x => x.Category);
+        const categoryChartValues = categoryData.map(x => x.Count);
+
+        const trendChartLabels = monthlyData.map(x => x.Month);
+        const trendChartValues = monthlyData.map(x => x.Count);
+
+        const pieCtx = document.getElementById('ticketCategoryChart');
+        if (pieCtx) {
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: categoryChartLabels,
+                    datasets: [{
+                        data: categoryChartValues,
+                        backgroundColor: ['#6C47FF', '#00D2D3', '#FFA429'],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        const lineCtx = document.getElementById('ticketTrendChart');
+        if (lineCtx) {
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: trendChartLabels,
+                    datasets: [{
+                        label: 'Tickets',
+                        data: trendChartValues,
+                        borderColor: '#6C47FF',
+                        backgroundColor: 'rgba(108, 71, 255, 0.15)',
+                        tension: 0.35,
+                        fill: true
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}
