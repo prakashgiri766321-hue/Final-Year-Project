@@ -72,13 +72,15 @@ namespace TicketManagementSystem.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateTicketDto dto)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            dto.CreatedById = user.Id;
+
             if (ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null) return Challenge();
-
-                dto.CreatedById = user.Id;
-
                 _ticketService.CreateTicket(dto);
 
                 return RedirectToAction("Index");
