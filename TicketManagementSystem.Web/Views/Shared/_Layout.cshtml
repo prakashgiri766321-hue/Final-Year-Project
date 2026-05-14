@@ -321,6 +321,13 @@
                                 <span>User Management</span>
                             </a>
                         }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="@NavClass("branch")" asp-controller="Branch" asp-action="Index">
+                                <i class="fa-fw fa-solid fa-building"></i>                        
+                                <span>Branch</span>
+                            </a>
+                        }
                     </nav>
                 </div>
 

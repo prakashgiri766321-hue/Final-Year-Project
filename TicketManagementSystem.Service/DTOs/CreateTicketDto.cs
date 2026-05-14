@@ -20,6 +20,6 @@ namespace TicketManagementSystem.Application.DTOs
         [Required]
         public int BranchId { get; set; }
 
-        public string CreatedById { get; set; }
+        public string? CreatedById { get; set; }
     }
 }

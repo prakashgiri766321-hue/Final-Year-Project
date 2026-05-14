@@ -21,6 +21,10 @@ namespace TicketManagementSystem.Application.DTOs
         public string Password { get; set; } = string.Empty;
 
         [Required]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Required]
         [Display(Name = "Role")]
         public string Role { get; set; } = string.Empty;
     }
